@@ -1,0 +1,17 @@
+{
+  "name": "Github Forks Menu",
+  "version": "0.0.1",
+  "description": "Hardcore Forking Action",
+  "permissions": [
+    "tabs" , "http://*.github.com/*", "https://*.github.com/*"
+  ],
+  "content_scripts": [
+     {
+       "matches": ["http://*.github.com/*", "https://*.github.com/*"],
+       "js": ["jquery-1.7.2.min.js", "forks.js"],
+       "run_at": "document_end",
+       "all_frames": true
+     }
+   ],
+   "manifest_version": 2
+}
