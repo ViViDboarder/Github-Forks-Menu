@@ -1,6 +1,6 @@
 var listItemHtml = '\
 		<li class="selector-item js-navigation-item js-navigation-target selected"> \
-            <a href="/{0}" onclick="function(){console.log(\'clicked\');}> \
+            <a href="/{0}" class="forks-repo-button"> \
                 <label> \
                   <input checked="checked" id="do_included" name="do" type="radio" value="included"> \
                   <h4>{0}</h4> \
@@ -80,6 +80,10 @@ function forksResults(data) {
 		// Add each item to the button dropdown
 		$('li.fork-list ul.js-navigation-container').append(String.format(listItemHtml, this.full_name, "Has " + this.watchers_count + " watchers and " + this.forks_count + " forks"));
 	});
+
+    $('li.fork-list ul.js-navigation-container li a.forks-repo-button').click(function(event){
+        window.open($(this).attr('href'), '_self');
+    });
 }
 
 getRepoData();
