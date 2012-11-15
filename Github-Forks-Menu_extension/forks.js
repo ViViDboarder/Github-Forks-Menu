@@ -40,7 +40,11 @@ String.format = function() {
 
 // Gets the repo url and makes json call for repo data
 function getRepoData() {
-	var repo = window.location.href.substr(window.location.href.indexOf(".com/") + 5);
+	var repo_url = window.location.href.substr(window.location.href.indexOf(".com/") + 5);
+    // Repo url might have more than just the repo name
+    var repoParts = repo_url.split("/");
+    var repo = repoParts[0] + '/' + repoParts[1];
+
 	var repoUrl = "https://api.github.com/repos/" + repo;
 	$.getJSON(repoUrl, repoResults);
 }
