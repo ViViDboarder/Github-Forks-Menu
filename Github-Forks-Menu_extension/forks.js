@@ -1,3 +1,6 @@
+// TODO: Find another way to get this header style from Github CSS
+var liHeaderStyle = 'font-weight: bold; color: #111; text-shadow: 1px 1px 0 white; padding: 8px 10px 5px 10px; background: #F6F8F8; background: -moz-linear-gradient(#F6F8F8, #E9EEEE); background: -webkit-linear-gradient(#F6F8F8, #E9EEEE); background: linear-gradient(#F6F8F8, #E9EEEE); border-bottom: 1px solid #F0F3F3; border-top-left-radius: 4px; border-top-right-radius: 4px;';
+
 var listItemHtml = '\
 		<li class="selector-item js-navigation-item js-navigation-target selected"> \
             <a href="/{0}" class="forks-repo-button"> \
@@ -58,15 +61,47 @@ function repoResults(data) {
 	$('ul.pagehead-actions').prepend('<li class="fork-list">' + buttonHtml + '</li>');
 	
 	// Add item for this repo
+    $('li.fork-list ul.js-navigation-container').append('<li style="' + liHeaderStyle + '">This Fork</li>');
 	$('li.fork-list ul.js-navigation-container').append(String.format(listItemHtml, data.full_name, "Has " + data.watchers_count + " watchers and " + data.forks_count + " forks"));
+    $('li.fork-list ul.js-navigation-container').append('<li style="' + liHeaderStyle + '">Parent Repo</li>');
+    if (data.parent) {
+        // Add parent repo
+        $('li.fork-list ul.js-navigation-container').append(String.format(listItemHtml, data.parent.full_name, "Has " + data.parent.watchers_count + " watchers and " + data.parent.forks_count + " forks"));
+    } else {
+        // No parent repo
+        var noParent = $(String.format(listItemHtml, "No Parent", "This repo has no parent"));
+        // remove the class so this doesn't function as a button
+        $('a.forks-repo-button', noParent).removeClass('forks-repo-button');
+		$('li.fork-list ul.js-navigation-container').append(noParent);
+    }
+
+    $('li.fork-list ul.js-navigation-container').append('<li style="' + liHeaderStyle + '">Forks</li>');
 	
 	if (data.forks > 0) {
 		// If we have forks, we go get fork data
 		getForkData();
 	} else {
 		// No forks
-		$('li.fork-list ul.js-navigation-container').append(String.format(listItemHtml, "No forks", "This repo has no forks"));
+        var noForks = $(String.format(listItemHtml, "No forks", "This repo has no forks"));
+        // remove the class so this doesn't function as a button
+        $('a.forks-repo-button', noForks).removeClass('forks-repo-button');
+		$('li.fork-list ul.js-navigation-container').append(noForks);
 	}
+
+    // Click action ot open fork since default function of a seems to be blocked
+    $('li.fork-list ul.js-navigation-container').on('click', 'li a.forks-repo-button', function(event){
+        window.open($(this).attr('href'), '_self');
+    });
+
+    // Hover effects
+    $('li.fork-list ul.js-navigation-container').on('mouseover', 'li', function(event){
+        // Mouse over
+        $(this).addClass("navigation-focus");
+    });
+    $('li.fork-list ul.js-navigation-container').on('mouseout', 'li', function(event){
+        // Mouse out
+        $(this).removeClass("navigation-focus");
+    });
 }
 
 // Gets fork data from fork api
@@ -84,21 +119,6 @@ function forksResults(data) {
 		// Add each item to the button dropdown
 		$('li.fork-list ul.js-navigation-container').append(String.format(listItemHtml, this.full_name, "Has " + this.watchers_count + " watchers and " + this.forks_count + " forks"));
 	});
-
-    // Click action ot open fork since default function of a seems to be blocked
-    $('li.fork-list ul.js-navigation-container li a.forks-repo-button').click(function(event){
-        window.open($(this).attr('href'), '_self');
-    });
-
-    $('li.fork-list ul.js-navigation-container li').hover(function(event){
-        // Mouse over
-        $(this).addClass("navigation-focus");
-    }
-    , function(event) {
-        // Mouse out
-        $(this).removeClass("navigation-focus");
-    });
-
 }
 
 getRepoData();
