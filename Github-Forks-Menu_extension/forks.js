@@ -81,9 +81,20 @@ function forksResults(data) {
 		$('li.fork-list ul.js-navigation-container').append(String.format(listItemHtml, this.full_name, "Has " + this.watchers_count + " watchers and " + this.forks_count + " forks"));
 	});
 
+    // Click action ot open fork since default function of a seems to be blocked
     $('li.fork-list ul.js-navigation-container li a.forks-repo-button').click(function(event){
         window.open($(this).attr('href'), '_self');
     });
+
+    $('li.fork-list ul.js-navigation-container li').hover(function(event){
+        // Mouse over
+        $(this).addClass("navigation-focus");
+    }
+    , function(event) {
+        // Mouse out
+        $(this).removeClass("navigation-focus");
+    });
+
 }
 
 getRepoData();
