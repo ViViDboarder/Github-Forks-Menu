@@ -41,12 +41,20 @@ String.format = function() {
   return s;
 }
 
-// Gets the repo url and makes json call for repo data
-function getRepoData() {
+// Returns the repo name from the url
+function getRepoName() {
 	var repo_url = window.location.href.substr(window.location.href.indexOf(".com/") + 5);
     // Repo url might have more than just the repo name
     var repoParts = repo_url.split("/");
     var repo = repoParts[0] + '/' + repoParts[1];
+
+    return repo;
+}
+
+
+// Gets the repo url and makes json call for repo data
+function getRepoData() {
+    var repo = getRepoName();
 
 	var repoUrl = "https://api.github.com/repos/" + repo;
 	$.getJSON(repoUrl, repoResults);
@@ -106,16 +114,16 @@ function repoResults(data) {
 
 // Gets fork data from fork api
 function getForkData() {
-	var repo = window.location.href.substr(window.location.href.indexOf(".com/") + 5);
+    var repo = getRepoName();
 	var forksUrl = "https://api.github.com/repos/" + repo + "/forks?sort=watchers";
+    console.log(forksUrl);
 	$.getJSON(forksUrl, forksResults);
 }
 
 // Callback with fork data
 function forksResults(data) {
-	//console.log(data);
+	console.log(data);
 	$.each(data, function() {
-		console.log(this);
 		// Add each item to the button dropdown
 		$('li.fork-list ul.js-navigation-container').append(String.format(listItemHtml, this.full_name, "Has " + this.watchers_count + " watchers and " + this.forks_count + " forks"));
 	});
