@@ -2,7 +2,7 @@
 var liHeaderStyle = 'font-weight: bold; color: #111; text-shadow: 1px 1px 0 white; padding: 8px 10px 5px 10px; background: #F6F8F8; background: -moz-linear-gradient(#F6F8F8, #E9EEEE); background: -webkit-linear-gradient(#F6F8F8, #E9EEEE); background: linear-gradient(#F6F8F8, #E9EEEE); border-bottom: 1px solid #F0F3F3; border-top-left-radius: 4px; border-top-right-radius: 4px;';
 
 var listItemHtml = '\
-		<li class="selector-item js-navigation-item js-navigation-target selected"> \
+        <li class="selector-item js-navigation-item js-navigation-target selected"> \
             <a href="/{0}" class="forks-repo-button"> \
                 <label> \
                   <input checked="checked" id="do_included" name="do" type="radio" value="included"> \
@@ -11,11 +11,11 @@ var listItemHtml = '\
                 </label> \
             </a> \
           </li> \
-	';
+    ';
 
 var buttonHtml = ' \
 <div class="context-menu-container js-menu-container js-context-menu"> \
-	<span class="minibutton switcher bigger js-menu-target"> \
+    <span class="minibutton switcher bigger js-menu-target"> \
       <span class="js-context-button"> \
           <span class="mini-icon mini-icon-fork"></span>Forks \
       </span> \
@@ -30,7 +30,7 @@ var buttonHtml = ' \
     </div> \
   </div> \
 </div> \
-	';
+    ';
 
 String.format = function() {
   var s = arguments[0];
@@ -43,7 +43,7 @@ String.format = function() {
 
 // Returns the repo name from the url
 function getRepoName() {
-	var repo_url = window.location.href.substr(window.location.href.indexOf(".com/") + 5);
+    var repo_url = window.location.href.substr(window.location.href.indexOf(".com/") + 5);
     // Repo url might have more than just the repo name
     var repoParts = repo_url.split("/");
     var repo = repoParts[0] + '/' + repoParts[1];
@@ -56,21 +56,21 @@ function getRepoName() {
 function getRepoData() {
     var repo = getRepoName();
 
-	var repoUrl = "https://api.github.com/repos/" + repo;
-	$.getJSON(repoUrl, repoResults);
+    var repoUrl = "https://api.github.com/repos/" + repo;
+    $.getJSON(repoUrl, repoResults);
 }
 
 // Callback with repo data
 function repoResults(data) {
-	console.log(data);
-	console.log("num forks: " + data.forks);
-	
-	// Create the button
-	$('ul.pagehead-actions').prepend('<li class="fork-list">' + buttonHtml + '</li>');
-	
-	// Add item for this repo
+    console.log(data);
+    console.log("num forks: " + data.forks);
+    
+    // Create the button
+    $('ul.pagehead-actions').prepend('<li class="fork-list">' + buttonHtml + '</li>');
+    
+    // Add item for this repo
     $('li.fork-list ul.js-navigation-container').append('<li style="' + liHeaderStyle + '">This Fork</li>');
-	$('li.fork-list ul.js-navigation-container').append(String.format(listItemHtml, data.full_name, "Has " + data.watchers_count + " watchers and " + data.forks_count + " forks"));
+    $('li.fork-list ul.js-navigation-container').append(String.format(listItemHtml, data.full_name, "Has " + data.watchers_count + " watchers and " + data.forks_count + " forks"));
     $('li.fork-list ul.js-navigation-container').append('<li style="' + liHeaderStyle + '">Parent Repo</li>');
     if (data.parent) {
         // Add parent repo
@@ -80,21 +80,21 @@ function repoResults(data) {
         var noParent = $(String.format(listItemHtml, "No Parent", "This repo has no parent"));
         // remove the class so this doesn't function as a button
         $('a.forks-repo-button', noParent).removeClass('forks-repo-button');
-		$('li.fork-list ul.js-navigation-container').append(noParent);
+        $('li.fork-list ul.js-navigation-container').append(noParent);
     }
 
     $('li.fork-list ul.js-navigation-container').append('<li style="' + liHeaderStyle + '">Forks</li>');
-	
-	if (data.forks > 0) {
-		// If we have forks, we go get fork data
-		getForkData();
-	} else {
-		// No forks
+    
+    if (data.forks > 0) {
+        // If we have forks, we go get fork data
+        getForkData();
+    } else {
+        // No forks
         var noForks = $(String.format(listItemHtml, "No forks", "This repo has no forks"));
         // remove the class so this doesn't function as a button
         $('a.forks-repo-button', noForks).removeClass('forks-repo-button');
-		$('li.fork-list ul.js-navigation-container').append(noForks);
-	}
+        $('li.fork-list ul.js-navigation-container').append(noForks);
+    }
 
     // Click action ot open fork since default function of a seems to be blocked
     $('li.fork-list ul.js-navigation-container').on('click', 'li a.forks-repo-button', function(event){
@@ -115,18 +115,18 @@ function repoResults(data) {
 // Gets fork data from fork api
 function getForkData() {
     var repo = getRepoName();
-	var forksUrl = "https://api.github.com/repos/" + repo + "/forks?sort=watchers";
+    var forksUrl = "https://api.github.com/repos/" + repo + "/forks?sort=watchers";
     console.log(forksUrl);
-	$.getJSON(forksUrl, forksResults);
+    $.getJSON(forksUrl, forksResults);
 }
 
 // Callback with fork data
 function forksResults(data) {
-	console.log(data);
-	$.each(data, function() {
-		// Add each item to the button dropdown
-		$('li.fork-list ul.js-navigation-container').append(String.format(listItemHtml, this.full_name, "Has " + this.watchers_count + " watchers and " + this.forks_count + " forks"));
-	});
+    console.log(data);
+    $.each(data, function() {
+        // Add each item to the button dropdown
+        $('li.fork-list ul.js-navigation-container').append(String.format(listItemHtml, this.full_name, "Has " + this.watchers_count + " watchers and " + this.forks_count + " forks"));
+    });
 }
 
 getRepoData();
