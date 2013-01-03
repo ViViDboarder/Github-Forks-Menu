@@ -1,3 +1,4 @@
+var debug = true;
 // TODO: Find another way to get this header style from Github CSS
 var liHeaderStyle = 'font-weight: bold; color: #111; text-shadow: 1px 1px 0 white; padding: 8px 10px 5px 10px; background: #F6F8F8; background: -moz-linear-gradient(#F6F8F8, #E9EEEE); background: -webkit-linear-gradient(#F6F8F8, #E9EEEE); background: linear-gradient(#F6F8F8, #E9EEEE); border-bottom: 1px solid #F0F3F3; border-top-left-radius: 4px; border-top-right-radius: 4px;';
 
@@ -66,8 +67,10 @@ function getRepoData() {
 
 // Callback with repo data
 function repoResults(data) {
-    console.log(data);
-    console.log("num forks: " + data.forks);
+    if (debug) {
+        console.log(data);
+        console.log("num forks: " + data.forks);
+    }
     
     // Create the button
     $('ul.pagehead-actions').prepend('<li class="fork-list">' + buttonHtml + '</li>');
@@ -120,13 +123,19 @@ function repoResults(data) {
 function getForkData() {
     var repo = getRepoName();
     var forksUrl = scheme + "//" + hostname + "/repos/" + repo + "/forks?sort=watchers";
-    console.log(forksUrl);
+    if (debug) {
+        console.log(forksUrl);
+    }
+
     $.getJSON(forksUrl, forksResults);
 }
 
 // Callback with fork data
 function forksResults(data) {
-    console.log(data);
+    if (debug) {
+        console.log(data);
+    }
+
     $.each(data, function() {
         // Add each item to the button dropdown
         $('li.fork-list ul.js-navigation-container').append(String.format(listItemHtml, this.full_name, "Has " + this.watchers_count + " watchers and " + this.forks_count + " forks"));
