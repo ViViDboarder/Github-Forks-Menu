@@ -41,24 +41,26 @@ String.format = function() {
   return s;
 };
 
-var scheme = "api.github.com";
+var scheme = "https";
+var hostname = "api.github.com";
 
 // Returns the repo name from the url
 function getRepoName() {
-    var repo_url = window.location.href.substr(window.location.href.indexOf(".com/") + 5);
     // Repo url might have more than just the repo name
-    var repoParts = repo_url.split(/[\/#]+/);
-    var repo = repoParts[0] + '/' + repoParts[1];
+    var repoParts = window.location.href.split(/[\/#]+/);
+    // 0: http(s)
+    // 1: Hostname
+    scheme = repoParts[0];
+    var repo = repoParts[2] + '/' + repoParts[3];
 
     return repo;
 }
-
 
 // Gets the repo url and makes json call for repo data
 function getRepoData() {
     var repo = getRepoName();
 
-    var repoUrl = "https://" + scheme + "/repos/" + repo;
+    var repoUrl = scheme + "//" + hostname + "/repos/" + repo;
     $.getJSON(repoUrl, repoResults);
 }
 
@@ -117,7 +119,7 @@ function repoResults(data) {
 // Gets fork data from fork api
 function getForkData() {
     var repo = getRepoName();
-    var forksUrl = "https://" + scheme + "/repos/" + repo + "/forks?sort=watchers";
+    var forksUrl = scheme + "//" + hostname + "/repos/" + repo + "/forks?sort=watchers";
     console.log(forksUrl);
     $.getJSON(forksUrl, forksResults);
 }
