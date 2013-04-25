@@ -16,7 +16,7 @@ var listItemHtml = [
 
 var buttonHtml = [
         '<div class="context-menu-container js-menu-container js-context-menu">',
-            '<span class="minibutton switcher bigger js-menu-target">',
+            '<span class="minibutton select-menu-button js-menu-target">',
                 '<span class="js-context-button">',
                     '<span class="mini-icon mini-icon-fork"></span>Forks',
                 '</span>',
